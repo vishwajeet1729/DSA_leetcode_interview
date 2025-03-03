@@ -1,26 +1,18 @@
 class Solution {
 public:
-int ct = 0; 
-int target;
+    int findTargetSumWays(vector<int>& nums, int target) {
+         int n = nums.size();
+        int offset = accumulate(nums.begin(), nums.end(), 0);
+        vector<vector<int>> dp(n, vector<int>(2 * offset + 1, -1)); 
+        function<int(int, int)> rec = [&](int ind, int sum) -> int {
+            if (ind == n) {
+                return sum == target ? 1 : 0;
+            }
+            if (dp[ind][sum + offset] != -1) return dp[ind][sum + offset];
 
-void rec(int ind, vector<int>& v, int 
-sum) {
-    int n = v.size();
-    
-    if (ind == n) {
-        if (sum == target) ct++;
-        return;
-    }
+            return dp[ind][sum + offset] = rec(ind + 1, sum + nums[ind]) + rec(ind + 1, sum - nums[ind]);
+        };
 
-    rec(ind + 1, v, sum + v[ind]);
-
-    rec(ind + 1, v, sum - v[ind]);
-}
-
-    int findTargetSumWays(vector<int>& nums, int ta) {
-          
-          target=ta;
-          rec(0,nums,0);
-          return ct;
+        return rec(0, 0);
     }
 };
