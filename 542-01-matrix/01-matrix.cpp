@@ -1,29 +1,23 @@
 class Solution {
 public:
-    vector<vector<int>> updateMatrix(vector<vector<int>>& v) {
-         int n=v.size(),m=v[0].size();
-    vector<vector<int>>ans(n,vector<int>(m,0));
-    
-    
+    vector<int> DIR = {0, 1, 0, -1, 0};
+    vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {
+        int m = mat.size(), n = mat[0].size();
+        queue<pair<int, int>> q;
+        for (int r = 0; r < m; ++r)
+            for (int c = 0; c < n; ++c)
+                if (mat[r][c] == 0) q.emplace(r, c);
+                else mat[r][c] = -1; // Marked as not processed yet!
 
-     for (int i = n - 1; i >= 0; i--) {
-        for (int j = m - 1; j >= 0; j--) {
-               if(v[i][j]==0)ans[i][j]=0;
-               else ans[i][j]=1e9; 
-                if (i < n - 1) ans[i][j] = min(ans[i][j], ans[i+1][j] + 1);
-                if (j < m - 1) ans[i][j] = min(ans[i][j], ans[i][j+1] + 1);            
+        while (!q.empty()) {
+            auto [r, c] = q.front(); q.pop();
+            for (int i = 0; i < 4; ++i) {
+                int nr = r + DIR[i], nc = c + DIR[i+1];
+                if (nr < 0 || nr == m || nc < 0 || nc == n || mat[nr][nc] != -1) continue;
+                mat[nr][nc] = mat[r][c] + 1;
+                q.emplace(nr, nc);
+            }
         }
-
-    }  
-    for(int i=0;i<n;++i){
-        for(int j=0;j<m;++j){
-            if(j>0)ans[i][j]=min(ans[i][j],ans[i][j-1]+1);
-            if(i>0)ans[i][j]=min(ans[i][j],ans[i-1][j]+1);
-            // cout<<ans[i][j]<<" ";
-        }
-        
-     }  
-return ans;
-
+        return mat;
     }
 };
