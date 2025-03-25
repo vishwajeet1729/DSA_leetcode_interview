@@ -7,32 +7,28 @@
  *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
  * };
  */
+
 class Solution {
 public:
-      TreeNode* ans=nullptr;  
+   TreeNode * ans=nullptr;   
+       int dfs( TreeNode * node,TreeNode * p,TreeNode *q){
+            if(!node)return 0;
+            
 
-      int dfs(TreeNode* node,int ct,TreeNode* p,TreeNode* q){
-          if(!node)return ct;
-          if(node==p){
-            ct|=(1<<1);
-          }
-          if(node==q){
-            ct|=(1<<0);
-          }
-         int left= dfs(node->left,0,p,q);
-          int right=dfs(node->right,0,p,q);
-          ct= ct|left|right;
-          if(ct==3&&!ans){
-            ans=node; 
-          }
+           int ct=0;
+           ct|=dfs(node->left,p,q);
+           ct|=dfs(node->right,p,q);
+           if(node==p)ct|=2;
+           if(node==q)ct|=1;
+           if(ct==3&&!ans){
+            ans=node;
+           }
            return ct;
-          
-
       }
+
     TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
-              
-              dfs(root,0,p,q);
-         return ans;
+          dfs(root,p,q);
+          return ans;
 
     }
 };
