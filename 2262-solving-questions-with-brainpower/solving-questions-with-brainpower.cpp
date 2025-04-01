@@ -1,24 +1,18 @@
 class Solution {
 public:
+    long long mostPoints(vector<vector<int>>& v) {
+int n=v.size();
+         vector<long long>dp(n+1,0);
 
-vector<long long>dp;
-vector<vector<int>>v;
-int n;
-long long rec(int ind) {
-    if (ind >= n) return 0; 
-
-    if (dp[ind] != -1) return dp[ind]; 
-
-    long long solve = v[ind][0] + (ind + v[ind][1] + 1 < n ? rec(ind + v[ind][1] + 1) : 0);
-    
-    long long skip = rec(ind + 1);
-
-    return dp[ind] = max(solve, skip); 
-}
-    long long mostPoints(vector<vector<int>>& ans) {
-        v=ans;
-        n=ans.size();
-        dp.resize(n,-1);
-        return rec(0);
+    for(int i=n-1;i>=0;--i){
+          long long cur_ans=0; 
+          long long take_cur=0;
+          take_cur+=v[i][0];
+          if(i+v[i][1]+1<n)take_cur+=dp[i+v[i][1]+1];
+          long long take_notCur=0;
+        take_notCur+=dp[i+1];
+        dp[i]=max(take_cur,take_notCur);
+    }
+    return dp[0];
     }
 };
